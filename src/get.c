@@ -89,6 +89,11 @@ prelink_record_relocations (struct prelink_info *info, FILE *f,
       GElf_Addr start = 0, l_addr = 0, tls_modid = 0, tls_offset = 0;
       unsigned long long l;
 
+      // skip weird "lookup ... __vdso..." lines
+      if (strncmp (buffer, "lookup ", sizeof ("lookup ") - 1) == 0) {
+	continue;
+      }
+
       if (buffer[0] != '\t' || (filename = strstr (buffer, " => ")) == NULL)
 	break;
       soname = buffer + 1;
@@ -138,7 +143,7 @@ prelink_record_relocations (struct prelink_info *info, FILE *f,
 
       if (ndeps > info->ent->ndepends)
 	{
-	  error (0, 0, "%s: Recorded %d dependencies, now seeing %d\n",
+	  error (0, 0, "%s: Recorded %d dependencies (1), now seeing %d\n",
 		 info->ent->filename, info->ent->ndepends, ndeps - 1);
 	  goto error_out;
 	}
@@ -202,7 +207,7 @@ prelink_record_relocations (struct prelink_info *info, FILE *f,
 
   if (ndeps != info->ent->ndepends + 1)
     {
-      error (0, 0, "%s: Recorded %d dependencies, now seeing %d\n",
+      error (0, 0, "%s: Recorded %d dependencies (2), now seeing %d\n",
 	     info->ent->filename, info->ent->ndepends, ndeps - 1);
       goto error_out;
     }
@@ -256,7 +261,7 @@ prelink_record_relocations (struct prelink_info *info, FILE *f,
 	  if (sscanf (buffer, "lookup 0x%llx 0x%llx -> 0x%llx 0x%llx %n",
 		      &symstart, &symoff, &valstart[0], &value[0], &len) != 4)
 	    {
-	      error (0, 0, "%s: Could not parse `%s'", info->ent->filename, buffer);
+	      error (0, 0, "%s: Could not parse (2) `%s'", info->ent->filename, buffer);
 	      goto error_out;
 	    }
 
@@ -270,7 +275,7 @@ prelink_record_relocations (struct prelink_info *info, FILE *f,
 	  if (buffer + len == symname || (reloc_class == 0 && type)
 	      || (*symname != ' ' && *symname != '\t'))
 	    {
-	      error (0, 0, "%s: Could not parse `%s'", info->ent->filename, buffer);
+	      error (0, 0, "%s: Could not parse (3) `%s'", info->ent->filename, buffer);
 	      goto error_out;
 	    }
 
@@ -460,7 +465,7 @@ prelink_record_relocations (struct prelink_info *info, FILE *f,
 		      &symstart, &symoff, &valstart[0], &value[0],
 		      &valstart[1], &value[1], &len) != 6)
 	    {
-	      error (0, 0, "%s: Could not parse `%s'", info->ent->filename, buffer);
+	      error (0, 0, "%s: Could not parse (4) `%s'", info->ent->filename, buffer);
 	      goto error_out;
 	    }
 
@@ -474,7 +479,7 @@ prelink_record_relocations (struct prelink_info *info, FILE *f,
 	  if (buffer + len == symname || (reloc_class == 0 && type)
 	      || (*symname != ' ' && *symname != '\t'))
 	    {
-	      error (0, 0, "%s: Could not parse `%s'", info->ent->filename, buffer);
+	      error (0, 0, "%s: Could not parse (5) `%s'", info->ent->filename, buffer);
 	      goto error_out;
 	    }
 

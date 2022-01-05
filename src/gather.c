@@ -177,6 +177,11 @@ gather_deps (DSO *dso, struct prelink_entry *ent)
       if (line[n - 1] == '\n')
 	line[n - 1] = '\0';
 
+      // skip weird "lookup ... __vdso..." lines
+      if (strncmp (line, "lookup ", sizeof ("lookup ") - 1) == 0) {
+	continue;
+      }
+
       p = strstr (line, " => ");
       if (p)
 	{
@@ -208,7 +213,7 @@ gather_deps (DSO *dso, struct prelink_entry *ent)
 		      goto error_out;
 		    }
 		}
-	      error (0, 0, "%s: Could not parse `%s'", ent->filename, line);
+	      error (0, 0, "%s: Could not parse (1) `%s'", ent->filename, line);
 	    }
 	  goto error_out;
 	}
@@ -270,6 +275,8 @@ gather_deps (DSO *dso, struct prelink_entry *ent)
 	  goto error_out;
 	}
     }
+
+  printf("%s: NDEPENDS IS %ld\n", ent->filename, ndepends);
 
   ent->ndepends = ndepends;
   char *cache_dyn_depends = NULL;
