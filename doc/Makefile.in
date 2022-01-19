@@ -216,7 +216,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(MANS) $(DATA)
+all-am: Makefile $(MANS) 
 
 installdirs:
 	$(mkinstalldirs) $(DESTDIR)$(man8dir)

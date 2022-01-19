@@ -50,6 +50,7 @@ config.log
 config.status
 doc/Makefile
 gelf/.deps/
+gelf/.libs/
 gelf/Makefile
 gelfx/Makefile
 gelfx32/Makefile
@@ -63,4 +64,5 @@ testsuite/Makefile
 ## make output
 src/execstack
 src/prelink
+doc/prelink.pdf
 
