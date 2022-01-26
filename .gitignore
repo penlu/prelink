@@ -65,4 +65,4 @@ testsuite/Makefile
 src/execstack
 src/prelink
 doc/prelink.pdf
-
+autom4te.cache/
